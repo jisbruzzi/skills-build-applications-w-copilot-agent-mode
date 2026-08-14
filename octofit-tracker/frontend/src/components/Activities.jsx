@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { buildApiUrl, normalizeRecords } from '../api.js';
 
 function Activities() {
   const [records, setRecords] = useState([]);
@@ -11,14 +10,22 @@ function Activities() {
 
     async function loadActivities() {
       try {
-        const response = await fetch(buildApiUrl('/api/activities/'));
+        const apiBaseUrl = import.meta.env.VITE_CODESPACE_NAME
+          ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev`
+          : 'http://localhost:8000';
+
+        const response = await fetch(`${apiBaseUrl}/api/activities/`);
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`);
         }
 
         const payload = await response.json();
-        const data = normalizeRecords(payload);
+        const data = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+            ? payload.data
+            : [];
 
         if (isMounted) {
           setRecords(data);
