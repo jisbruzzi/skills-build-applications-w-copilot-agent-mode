@@ -7,6 +7,11 @@ import Activity from './models/Activity';
 import LeaderboardEntry from './models/Leaderboard';
 import Workout from './models/Workout';
 
+const codespaceName = process.env.CODESPACE_NAME;
+const codespaceUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : `http://localhost:${config.PORT}`;
+
 const app: Express = express();
 const routes = [
   { name: 'users', path: '/api/users/' },
@@ -22,7 +27,7 @@ app.get('/', (_req: Request, res: Response) => {
   res.json({
     service: 'Octofit Tracker API',
     status: 'ok',
-    apiBaseUrl: API_BASE_URL,
+    apiBaseUrl: codespaceUrl,
     routes: routes.map(({ path }) => path),
   });
 });
@@ -31,7 +36,7 @@ app.get('/api', (_req: Request, res: Response) => {
   res.json({
     message: 'Octofit Tracker API',
     endpoints: routes.map(({ path }) => path),
-    apiBaseUrl: API_BASE_URL,
+    apiBaseUrl: codespaceUrl,
   });
 });
 
@@ -63,7 +68,7 @@ for (const route of routes) {
 
       res.json({
         resource,
-        apiBaseUrl: API_BASE_URL,
+        apiBaseUrl: codespaceUrl,
         data,
       });
     } catch (error) {
@@ -116,7 +121,8 @@ for (const route of routes) {
 if (require.main === module) {
   app.listen(config.PORT, () => {
     console.log(`Octofit Tracker API running on http://localhost:${config.PORT}`);
-    console.log(`Codespaces API URL: ${API_BASE_URL}`);
+    console.log(`Codespaces API URL: ${codespaceUrl}`);
+    console.log(`CODESPACE_NAME: ${codespaceName ?? 'not set'}`);
   });
 }
 
