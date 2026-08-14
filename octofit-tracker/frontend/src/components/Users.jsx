@@ -10,11 +10,11 @@ function Users() {
 
     async function loadUsers() {
       try {
-        const apiBaseUrl = import.meta.env.VITE_CODESPACE_NAME
-          ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev`
-          : 'http://localhost:8000';
+        const url = import.meta.env.VITE_CODESPACE_NAME
+          ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users`
+          : 'http://localhost:8000/api/users';
 
-        const response = await fetch(`${apiBaseUrl}/api/users/`);
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`);
