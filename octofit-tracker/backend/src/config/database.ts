@@ -9,10 +9,11 @@ mongoose
     console.log('Connected to octofit_db');
   })
   .catch((error) => {
-    console.error('Error connecting to octofit_db:', error);
-    process.exit(1);
+    console.error('MongoDB connection error:', error.message || error);
   });
 
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', (error) => {
+  console.error('MongoDB connection error:', error);
+});
 
 export default db;
